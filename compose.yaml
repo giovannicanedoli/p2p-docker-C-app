@@ -1,23 +1,26 @@
 version: '3.8'
 
 services:
-  foo:
+  dns_server:
     build:
-      context: .
+      context: ./dns_server
       dockerfile: Dockerfile
-    # altre configurazioni per il servizio "foo"
+    networks:
+      - network
 
-  bar:
+  client_1:
     build:
-      context: .
+      context: ./client_1
       dockerfile: Dockerfile
-    # altre configurazioni per il servizio "bar"
+    networks:
+      - network
 
-
-  baz:
+  client_2:
     build:
-      context: .
+      context: ./client_2
       dockerfile: Dockerfile
-    # altre configurazioni per il servizio "baz"
-    
-
+    networks:
+      - network
+  
+networks:
+  network:
