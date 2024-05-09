@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  foo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # altre configurazioni per il servizio "foo"
+
+  bar:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # altre configurazioni per il servizio "bar"
+
+
+  baz:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # altre configurazioni per il servizio "baz"
+    
+
