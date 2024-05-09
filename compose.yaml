@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   dns_server:
     build:
@@ -7,6 +5,13 @@ services:
       dockerfile: Dockerfile
     networks:
       - network
+      - p2p
+    #this for running first database and then dns server
+    depends_on:
+      - database
+    #setting an environment variable in the container
+    environment:
+      - DATABASE_URL=sqlite:///data/dns.db
 
   client_1:
     build:
@@ -14,6 +19,8 @@ services:
       dockerfile: Dockerfile
     networks:
       - network
+    depends_on:
+      - dns_server
 
   client_2:
     build:
@@ -21,6 +28,16 @@ services:
       dockerfile: Dockerfile
     networks:
       - network
+    depends_on:
+      - dns_server
+  
+  database:
+    image: nouchka/sqlite3:latest
+    volumes:
+      - ./data:/data
+    networks:
+      - p2p
   
 networks:
   network:
+  p2p:

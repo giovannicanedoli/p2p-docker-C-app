@@ -1,7 +1,7 @@
-[ ] creare le reti
+[x] creare le reti
+[x] rinominare le cartelle
+[x] capire se il database vada connesso al server oppure vada creato
 [ ] capire cosa deve fare il server dns
 [ ] capire cosa devono fare i client
-[ ] capire come devono scambiarsi i messaggi
-[ ] rinominare le cartelle
 [ ] capire come far funzionare il protocollo
-[ ] capire se il database vada connesso al server oppure vada creato
+[ ] capire come devono scambiarsi i messaggi
