@@ -6,12 +6,10 @@ services:
     networks:
       - network
       - p2p
-    #this for running first database and then dns server
     depends_on:
-      - database
-    #setting an environment variable in the container
+      - mysql_database
     environment:
-      - DATABASE_URL=sqlite:///data/dns.db
+      - DATABASE_URL=mysql://root:your_root_password@mysql_database:3306/your_database_name
 
   client_1:
     build:
@@ -30,14 +28,17 @@ services:
       - network
     depends_on:
       - dns_server
-  
-  database:
-    image: nouchka/sqlite3:latest
-    volumes:
-      - ./data:/data
+
+  mysql_database:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=funzionatiprego
     networks:
       - p2p
-  
+    ports:
+      - "3306:3306"
+
 networks:
   network:
   p2p:

@@ -1,6 +1,7 @@
 [x] creare le reti
 [x] rinominare le cartelle
-[x] capire se il database vada connesso al server oppure vada creato
+[ ] capire se il database vada connesso al server oppure vada creato
+[ ] connettere db al file C
 [ ] capire cosa deve fare il server dns
 [ ] capire cosa devono fare i client
 [ ] capire come far funzionare il protocollo
