@@ -5,11 +5,10 @@ services:
       dockerfile: Dockerfile
     networks:
       - network
-      - p2p
     depends_on:
       - mysql_database
     environment:
-      - DATABASE_URL=mysql://root:your_root_password@mysql_database:3306/your_database_name
+      - DATABASE_URL=mysql://root:password@mysql_database:3306/DNS
 
   client_1:
     build:
@@ -30,15 +29,13 @@ services:
       - dns_server
 
   mysql_database:
-    image: mysql:latest
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=funzionatiprego
+    build:
+      context: ./database
+      dockerfile: Dockerfile
     networks:
-      - p2p
+      - network
     ports:
       - "3306:3306"
 
 networks:
   network:
-  p2p:
