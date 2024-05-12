@@ -4,6 +4,6 @@ COPY ./main.c /app/
 
 WORKDIR /app
 
-RUN gcc -o main main.c
+RUN gcc -o main main.c -lpthread
 
 CMD ["./main"]
