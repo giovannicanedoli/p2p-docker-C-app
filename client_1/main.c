@@ -17,6 +17,7 @@ int main(int argc, char const *argv[]){
     printf("ENTER PORT NUMBER: ");
     fflush(stdout);
     scanf("%d", &portnumber);
+    while(getchar() != '\n');
 
     int server_fd, new_socket, valread;
     struct sockaddr_in address;
@@ -46,30 +47,35 @@ int main(int argc, char const *argv[]){
         handle_error("couldn't spawn the recv thread");
     }
 
-    printf("Enter message to send: \n");
+    printf("Enter message to send, QUIT to quit\n");
     char* message = malloc(MESSAGESIZE);
-    memset(message, 0, MESSAGESIZE);
-    scanf(" %s", message);
-
-
+    
+    fgets(message, MESSAGESIZE, stdin);
+    // printf("%s\n", message);
+    
     while(strcmp(message, "QUIT") != 0){
 
         //send_data_to_server(message);   this has to be changed!
-        send_data_to_peer(message, "client_2");
+        int port_other_peer;
+        printf("Enter others peer port: \n");
+        scanf(" %d", &port_other_peer);
+        while(getchar() != '\n');
 
-        printf("Message sent successfully both to server and client!\n");
+        send_data_to_peer(port_other_peer, message, "client_2");
+
+        printf("Message sent successfully!\n");
 
         memset(message, 0, MESSAGESIZE);
 
-        printf("Enter message to send: \n");
-        scanf(" %s", message);
+        printf("Enter new message to send: \n");
+        fgets(message, MESSAGESIZE, stdin);
 
     }
 
     return 0;
 }
 
-void handle_error(char* message){
+void handle_error(const char* message){
     perror(message);
     exit(EXIT_FAILURE);
 }
@@ -118,7 +124,7 @@ void recvdata(int socket){
                 }
                 else{
                     valread = recv(i, buffer, sizeof(buffer), 0);
-                    printf("\n%s\n", buffer);
+                    printf("%s", buffer);
                     FD_CLR(i, &current_sockets);
                 }
             }
@@ -127,10 +133,8 @@ void recvdata(int socket){
     }
 }
 
-void send_data_to_peer(const char* msg, const char* peer){
-    int port_other_peer;
-    printf("Enter others peer port: \n");
-    scanf("%d", &port_other_peer);
+void send_data_to_peer(const int peerport, const char* msg, const char* peer){
+
     int sockfd;
     int valread;
     struct sockaddr_in otherpeeraddr;
@@ -142,7 +146,7 @@ void send_data_to_peer(const char* msg, const char* peer){
     //change this voices!
     otherpeeraddr.sin_family = AF_INET;
     otherpeeraddr.sin_addr.s_addr = INADDR_ANY; //INADDR_ANY always gives an IP of 0.0.0.0
-    otherpeeraddr.sin_port = htons(port_other_peer);
+    otherpeeraddr.sin_port = htons(peerport);
 
     if (connect(sockfd, (struct sockaddr *)&otherpeeraddr, sizeof(otherpeeraddr)) < 0){
         handle_error("Connection failed!");
@@ -158,5 +162,8 @@ void send_data_to_peer(const char* msg, const char* peer){
 }
 
 void send_data_to_server(const char* msg){
-    send_data_to_peer(msg, "SERVER");
+    /*da modificare con la porta del server!
+    ora ci metto un numero a caso
+    */
+    send_data_to_peer(20009, msg, "SERVER");
 }
