@@ -1,5 +1,5 @@
 #define NAMESIZE 100
-#define MESSAGESIZE 1000
+#define MESSAGESIZE 100
 #define NPEERS 10
 
 void handle_error(const char* msg);

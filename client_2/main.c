@@ -13,11 +13,7 @@
 int main(int argc, char const *argv[]){
     int ret;
     // I should set portnumber directly from docker compose!
-    int portnumber;
-    printf("ENTER PORT NUMBER: ");
-    fflush(stdout);
-    scanf("%d", &portnumber);
-    while(getchar() != '\n');
+    int portnumber = 30000;
 
     int server_fd, new_socket, valread;
     struct sockaddr_in address;
@@ -47,29 +43,21 @@ int main(int argc, char const *argv[]){
         handle_error("couldn't spawn the recv thread");
     }
 
-    printf("Enter message to send, QUIT to quit\n");
     char* message = malloc(MESSAGESIZE);
-    
-    fgets(message, MESSAGESIZE, stdin);
+    message = "MANDO MESSAGGIO SO PEER2\n\0";
+
+    // fgets(message, MESSAGESIZE, stdin);
     // printf("%s\n", message);
-    
-    while(strcmp(message, "QUIT") != 0){
 
+    int port_other_peer = 25000;
+
+    printf("CONNECTION ENSTABLISHED!\n");
+    int counter = 10;
+    while(counter > 0){
         //send_data_to_server(message);   this has to be changed!
-        int port_other_peer;
-        printf("Enter others peer port: \n");
-        scanf(" %d", &port_other_peer);
-        while(getchar() != '\n');
-
         send_data_to_peer(port_other_peer, message, "client_2");
-
         printf("Message sent successfully!\n");
-
-        memset(message, 0, MESSAGESIZE);
-
-        printf("Enter new message to send: \n");
-        fgets(message, MESSAGESIZE, stdin);
-
+        counter--;
     }
 
     return 0;
