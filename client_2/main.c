@@ -10,10 +10,11 @@
 #include <arpa/inet.h>
 #include "main.h"
 
+int PORT = 30000;
+
 int main(int argc, char const *argv[]){
     int ret;
     // I should set portnumber directly from docker compose!
-    int portnumber = 30000;
 
     int server_fd, new_socket, valread;
     struct sockaddr_in address;
@@ -24,7 +25,7 @@ int main(int argc, char const *argv[]){
 
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(portnumber);
+    address.sin_port = htons(PORT);
 
     printf("IP address is: %s\n", inet_ntoa(address.sin_addr));
     printf("port is: %d\n", (int)ntohs(address.sin_port));
@@ -45,21 +46,20 @@ int main(int argc, char const *argv[]){
 
     char* message = malloc(MESSAGESIZE);
     message = "MANDO MESSAGGIO SO PEER2\n\0";
-
-    // fgets(message, MESSAGESIZE, stdin);
-    // printf("%s\n", message);
-
+    
     int port_other_peer = 25000;
 
-    printf("CONNECTION ENSTABLISHED!\n");
-    int counter = 10;
-    while(counter > 0){
-        //send_data_to_server(message);   this has to be changed!
-        send_data_to_peer(port_other_peer, message, "client_2");
-        printf("Message sent successfully!\n");
-        counter--;
+    int nmsg = 10;
+    while(1){
+        sleep(3);
+        while(nmsg > 0){
+            //send_data_to_server(message);   this has to be changed!
+            send_data_to_peer(port_other_peer, message, "client_1");
+            printf("Message sent successfully!\n");
+            nmsg--;
+        }
+        nmsg = 10;
     }
-
     return 0;
 }
 
@@ -140,8 +140,10 @@ void send_data_to_peer(const int peerport, const char* msg, const char* peer){
         handle_error("Connection failed!");
     }
 
-    //check for errors in send!
-    send(sockfd, msg, sizeof(msg), 0);
+    char buffer[2000] = {0};
+
+    sprintf(buffer, "%s[PORT:%d] says: %s", "client2", PORT, msg);
+    send(sockfd, buffer, sizeof(buffer), 0);
     int ret = close(sockfd);
     if(ret == -1){
         handle_error("Couldn't close file descriptor!");
